@@ -1,6 +1,7 @@
 import './globals.css';
 import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from '../components/ThemeProvider';
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata = {
   title: 'ClearCut — AI Background Remover',
@@ -40,6 +41,7 @@ export default function RootLayout({ children }) {
             }}
           />
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
