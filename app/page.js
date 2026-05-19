@@ -10,6 +10,19 @@ import Loader from '../components/Loader';
 import Footer from '../components/Footer';
 import { Sparkles, Shield, Zap, ImageIcon } from 'lucide-react';
 
+// 🔒 Usage Limit System
+const checkLimit = () => {
+  let count = localStorage.getItem("usage") || 0;
+
+  if (count >= 3) {
+    alert("Free limit reached! Upgrade to Pro");
+    return false;
+  }
+
+  localStorage.setItem("usage", Number(count) + 1);
+  return true;
+};
+
 const features = [
   {
     icon: Zap,
@@ -39,6 +52,13 @@ export default function Home() {
   const handleUpload = async (dataUrl, fileInfo) => {
     setOriginal(dataUrl);
     setState('loading');
+
+    if (!checkLimit()) return;
+    const isPremium = localStorage.getItem("premium");
+
+if (!isPremium) {
+  if (!checkLimit()) return;
+}
 
     try {
       // Convert base64 to blob
