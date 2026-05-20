@@ -50,7 +50,7 @@ const handleUpload = async (dataUrl, fileInfo) => {
       let count = Number(localStorage.getItem("usage") || 0);
 
       if (count >= 3) {
-        alert("Free limit reached! Upgrade to Pro");
+        alert(alert("Free limit reached 🚫\nBuy Pro & enter code below to unlock 🚀"););
         return;
       }
 
@@ -93,6 +93,67 @@ const handleUpload = async (dataUrl, fileInfo) => {
     isProcessing = false; // 🔥 ALWAYS reset
   }
 };
+
+const [proCode, setProCode] = useState("");
+
+const activatePro = () => {
+  if (proCode === "PRO123") {
+    localStorage.setItem("premium", "true");
+    alert("Pro Activated 🚀");
+    setProCode("");
+  } else {
+    alert("Invalid Code ❌");
+  }
+};
+
+<div style={{ marginTop: "20px", textAlign: "center" }}>
+
+  {/* 🔥 Buy Button */}
+  <button
+    onClick={() => window.open("https://shivster87.gumroad.com/l/xhqoan")}
+    style={{
+      padding: "10px 15px",
+      borderRadius: "8px",
+      background: "green",
+      color: "white",
+      cursor: "pointer",
+      marginBottom: "10px"
+    }}
+  >
+    Buy Pro 🚀
+  </button>
+
+  <br />
+
+  {/* 🔐 Input Box */}
+  <input
+    type="text"
+    placeholder="Enter Pro Code"
+    value={proCode}
+    onChange={(e) => setProCode(e.target.value)}
+    style={{
+      padding: "10px",
+      borderRadius: "8px",
+      border: "1px solid #ccc",
+      marginRight: "10px",
+      marginTop: "10px"
+    }}
+  />
+
+  <button
+    onClick={activatePro}
+    style={{
+      padding: "10px 15px",
+      borderRadius: "8px",
+      background: "black",
+      color: "white",
+      cursor: "pointer"
+    }}
+  >
+    Activate 🚀
+  </button>
+
+</div>
 
   const handleReset = () => {
     setState('idle');
