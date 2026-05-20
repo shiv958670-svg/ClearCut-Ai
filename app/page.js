@@ -43,28 +43,37 @@ const handleUpload = async (dataUrl, fileInfo) => {
   if (isProcessing) return;
   isProcessing = true;
 
-  const isPremium = localStorage.getItem("premium");
+  try {
+    const isPremium = localStorage.getItem("premium");
 
-  if (!isPremium) {
-    let count = localStorage.getItem("usage") || 0;
+    if (!isPremium) {
+      let count = Number(localStorage.getItem("usage") || 0);
 
-    if (count >= 3) {
-      alert("Free limit reached! Upgrade to Pro");
-      isProcessing = false;
-      return;
+      if (count >= 3) {
+        alert("Free limit reached! Upgrade to Pro");
+        return;
+      }
+
+      localStorage.setItem("usage", count + 1);
     }
 
-    localStorage.setItem("usage", Number(count) + 1);
+    // ✅ अब UI update करो
+    setOriginal(dataUrl);
+    setState('loading');
+
+    // 👇 तुम्हारा API call यहाँ
+    // await fetch(...)
+
+    // जब success हो जाए
+    setState('done');
+
+  } catch (err) {
+    console.error(err);
+    alert("Something went wrong");
+    setState('error');
+  } finally {
+    isProcessing = false; // 🔥 हमेशा reset होगा
   }
-
-  // ✅ अब UI update करो
-  setOriginal(dataUrl);
-  setState('loading');
-
-  // 👇 API call
-
-  // जब finish हो जाए:
-  isProcessing = false;
 };
     try {
       // Convert base64 to blob
