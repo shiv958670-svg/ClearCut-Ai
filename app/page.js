@@ -34,9 +34,11 @@ const features = [
 ];
 
 export default function Home() {
-  const [state, setState] = useState('idle'); // 'idle' | 'loading' | 'done'
+   const [state, setState] = useState('idle'); // 'idle' | 'loading' | 'done'
   const [original, setOriginal] = useState(null);
   const [result, setResult] = useState(null);
+
+   const [showUpgrade, setShowUpgrade] = useState(false);
 
 const handleUpload = async (dataUrl, fileInfo) => {
 
@@ -50,7 +52,7 @@ const handleUpload = async (dataUrl, fileInfo) => {
       let count = Number(localStorage.getItem("usage") || 0);
 
       if (count >= 3) {
-        alert(alert("Free limit reached 🚫\nBuy Pro & enter code below to unlock 🚀"););
+        setShowUpgrade(true);
         return;
       }
 
@@ -272,6 +274,57 @@ const activatePro = () => {
                 transition={{ duration: 0.4 }}
               >
                 <UploadBox onUpload={handleUpload} loading={false} />
+                {showUpgrade && (
+  <div style={{ marginTop: "20px", textAlign: "center" }}>
+
+    <h3>🚫 Free Limit Reached</h3>
+    <p>Upgrade to Pro for unlimited background removals 🚀</p>
+
+    <button
+      onClick={() => window.open("https://shivster87.gumroad.com/l/xhqoan")}
+      style={{
+        padding: "10px 15px",
+        borderRadius: "8px",
+        background: "green",
+        color: "white",
+        cursor: "pointer",
+        marginBottom: "10px"
+      }}
+    >
+      Buy Pro 🚀
+    </button>
+
+    <br />
+
+    <input
+      type="text"
+      placeholder="Enter Pro Code"
+      value={proCode}
+      onChange={(e) => setProCode(e.target.value)}
+      style={{
+        padding: "10px",
+        borderRadius: "8px",
+        border: "1px solid #ccc",
+        marginRight: "10px",
+        marginTop: "10px"
+      }}
+    />
+
+    <button
+      onClick={activatePro}
+      style={{
+        padding: "10px 15px",
+        borderRadius: "8px",
+        background: "black",
+        color: "white",
+        cursor: "pointer"
+      }}
+    >
+      Activate 🚀
+    </button>
+
+  </div>
+)}
               </motion.div>
             )}
 
