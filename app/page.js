@@ -10,18 +10,7 @@ import Loader from '../components/Loader';
 import Footer from '../components/Footer';
 import { Sparkles, Shield, Zap, ImageIcon } from 'lucide-react';
 
-// 🔒 Usage Limit System
-const checkLimit = () => {
-  let count = localStorage.getItem("usage") || 0;
 
-  if (count >= 3) {
-    alert("Free limit reached! Upgrade to Pro");
-    return false;
-  }
-
-  localStorage.setItem("usage", Number(count) + 1);
-  return true;
-};
 
 const features = [
   {
@@ -49,16 +38,27 @@ export default function Home() {
   const [original, setOriginal] = useState(null);
   const [result, setResult] = useState(null);
 
-  const handleUpload = async (dataUrl, fileInfo) => {
-    setOriginal(dataUrl);
-    setState('loading');
+ const handleUpload = async (dataUrl, fileInfo) => {
+  setOriginal(dataUrl);
+  setState('loading');
 
-    if (!checkLimit()) return;
-    const isPremium = localStorage.getItem("premium");
+  const isPremium = localStorage.getItem("premium");
 
-if (!isPremium) {
-  if (!checkLimit()) return;
-}
+  if (!isPremium) {
+    let count = localStorage.getItem("usage");
+
+    count = count ? Number(count) : 0;
+
+    if (count >= 3) {
+      alert("Free limit reached! Upgrade to Pro");
+      return;
+    }
+
+    localStorage.setItem("usage", count + 1);
+  }
+
+  // continue upload logic here...
+};
 
     try {
       // Convert base64 to blob
