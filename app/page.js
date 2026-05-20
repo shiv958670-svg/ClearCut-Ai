@@ -40,24 +40,31 @@ export default function Home() {
 
  const handleUpload = async (dataUrl, fileInfo) => {
   setOriginal(dataUrl);
-  setState('loading');
 
-  const isPremium = localStorage.getItem("premium");
+  const isPremium = localStorage.getItem("premium") === "true";
 
   if (!isPremium) {
-    let count = localStorage.getItem("usage");
+    let raw = localStorage.getItem("usage");
 
-    count = count ? Number(count) : 0;
+    let count = parseInt(raw, 10);
+
+    if (isNaN(count)) {
+      count = 0;
+    }
+
+    console.log("DEBUG usage:", count);
 
     if (count >= 3) {
       alert("Free limit reached! Upgrade to Pro");
       return;
     }
 
-    localStorage.setItem("usage", count + 1);
+    localStorage.setItem("usage", String(count + 1));
   }
 
-  // continue upload logic here...
+  setState("loading");
+
+  // continue upload logic...
 };
 
     try {
