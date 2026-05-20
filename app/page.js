@@ -10,7 +10,7 @@ import Loader from '../components/Loader';
 import Footer from '../components/Footer';
 import { Sparkles, Shield, Zap, ImageIcon } from 'lucide-react';
 
-
+let isProcessing = false;
 
 const features = [
   {
@@ -39,29 +39,31 @@ export default function Home() {
   const [result, setResult] = useState(null);
 
  const handleUpload = async (dataUrl, fileInfo) => {
-  console.log("UPLOAD FUNCTION CALLED");
 
-  const isPremium = localStorage.getItem("premium") === "true";
-
-  let raw = localStorage.getItem("usage");
-  let count = parseInt(raw || "0", 10);
-
-  if (isNaN(count)) count = 0;
-
-  if (!isPremium && count >= 3) {
-    alert("Free limit reached! Upgrade to Pro");
-    return;
-  }
-
-  // ⚠️ increment BEFORE upload (important fix)
-  if (!isPremium) {
-    localStorage.setItem("usage", String(count + 1));
-  }
+  if (isProcessing) return; // 🔥 DOUBLE CALL BLOCK
+  isProcessing = true;
 
   setOriginal(dataUrl);
-  setState("loading");
+  setState('loading');
 
-  // continue upload logic...
+  const isPremium = localStorage.getItem("premium");
+
+  if (!isPremium) {
+    let count = localStorage.getItem("usage") || 0;
+
+    if (count >= 3) {
+      alert("Free limit reached! Upgrade to Pro");
+      isProcessing = false;
+      return;
+    }
+
+    localStorage.setItem("usage", Number(count) + 1);
+  }
+
+
+
+  // जब काम खत्म हो जाए:
+  isProcessing = false;
 };
 
     try {
