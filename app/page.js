@@ -39,29 +39,26 @@ export default function Home() {
   const [result, setResult] = useState(null);
 
  const handleUpload = async (dataUrl, fileInfo) => {
-  setOriginal(dataUrl);
+  console.log("UPLOAD FUNCTION CALLED");
 
   const isPremium = localStorage.getItem("premium") === "true";
 
+  let raw = localStorage.getItem("usage");
+  let count = parseInt(raw || "0", 10);
+
+  if (isNaN(count)) count = 0;
+
+  if (!isPremium && count >= 3) {
+    alert("Free limit reached! Upgrade to Pro");
+    return;
+  }
+
+  // ⚠️ increment BEFORE upload (important fix)
   if (!isPremium) {
-    let raw = localStorage.getItem("usage");
-
-    let count = parseInt(raw, 10);
-
-    if (isNaN(count)) {
-      count = 0;
-    }
-
-    console.log("DEBUG usage:", count);
-
-    if (count >= 3) {
-      alert("Free limit reached! Upgrade to Pro");
-      return;
-    }
-
     localStorage.setItem("usage", String(count + 1));
   }
 
+  setOriginal(dataUrl);
   setState("loading");
 
   // continue upload logic...
