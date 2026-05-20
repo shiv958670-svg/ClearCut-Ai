@@ -57,51 +57,42 @@ const handleUpload = async (dataUrl, fileInfo) => {
       localStorage.setItem("usage", count + 1);
     }
 
-    // ✅ अब UI update करो
+    // ✅ UI update
     setOriginal(dataUrl);
     setState('loading');
 
-    // 👇 तुम्हारा API call यहाँ
-    // await fetch(...)
+    // ✅ Convert base64 to blob
+    const res = await fetch(dataUrl);
+    const blob = await res.blob();
 
-    // जब success हो जाए
+    const formData = new FormData();
+    formData.append('image', blob, fileInfo?.name || 'image.png');
+
+    // ✅ API call
+    const response = await fetch('/api/remove-bg', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || data.error) {
+      throw new Error(data.error || 'Background removal failed.');
+    }
+
+    // ✅ success
+    setResult(data.image);
     setState('done');
+    toast.success('Background removed! 🎉');
 
   } catch (err) {
     console.error(err);
-    alert("Something went wrong");
-    setState('error');
+    setState('idle');
+    toast.error(err.message || 'Something went wrong.');
   } finally {
-    isProcessing = false; // 🔥 हमेशा reset होगा
+    isProcessing = false; // 🔥 ALWAYS reset
   }
 };
-    try {
-      // Convert base64 to blob
-      const res = await fetch(dataUrl);
-      const blob = await res.blob();
-
-      const formData = new FormData();
-      formData.append('image', blob, fileInfo?.name || 'image.png');
-
-      const response = await fetch('/api/remove-bg', {
-        method: 'POST',
-        body: formData,
-      });
-
-      const data = await response.json();
-
-      if (!response.ok || data.error) {
-        throw new Error(data.error || 'Background removal failed.');
-      }
-
-      setResult(data.image);
-      setState('done');
-      toast.success('Background removed! 🎉');
-    } catch (err) {
-      setState('idle');
-      toast.error(err.message || 'Something went wrong. Please try again.');
-    }
-  };
 
   const handleReset = () => {
     setState('idle');
