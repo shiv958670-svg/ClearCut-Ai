@@ -38,13 +38,10 @@ export default function Home() {
   const [original, setOriginal] = useState(null);
   const [result, setResult] = useState(null);
 
- const handleUpload = async (dataUrl, fileInfo) => {
+const handleUpload = async (dataUrl, fileInfo) => {
 
-  if (isProcessing) return; // 🔥 DOUBLE CALL BLOCK
+  if (isProcessing) return;
   isProcessing = true;
-
-  setOriginal(dataUrl);
-  setState('loading');
 
   const isPremium = localStorage.getItem("premium");
 
@@ -60,12 +57,15 @@ export default function Home() {
     localStorage.setItem("usage", Number(count) + 1);
   }
 
+  // ✅ अब UI update करो
+  setOriginal(dataUrl);
+  setState('loading');
 
+  // 👇 API call
 
-  // जब काम खत्म हो जाए:
+  // जब finish हो जाए:
   isProcessing = false;
 };
-
     try {
       // Convert base64 to blob
       const res = await fetch(dataUrl);
